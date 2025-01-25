@@ -1,0 +1,41 @@
+openapi: 3.0.0
+
+components:
+  schemas:
+    user:
+      request:
+        description: User object to be added
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userName:
+                  type: string
+                firstName:
+                  type: string
+                lastName:
+                  type: string
+                email:
+                  type: string
+                address:
+                  type: string
+                password:
+                  type: string
+              example:
+                userName: satya
+                firstName: Satya
+                lastName: Siddhani
+                email: satya.siddhani@gmail.com
+                address: NSP
+                password: "*********"
+  responses:
+    "201":
+      description: User created successfully
+      content:
+        application/json:
+          example:
+            data: [{}]
+    "400":
+      description: Bad request

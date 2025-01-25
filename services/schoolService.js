@@ -1,32 +1,105 @@
-const { School } = require("../models");
+const { Op } = require("sequelize");
+const AppError = require("../utils/appError");
+const { moveFile, deleteFile } = require("../utils/fileUtils");
+const School = require("../models/schoolModel");
 
 exports.createSchool = async (schoolData) => {
   const newSchoolData = await School.create(schoolData);
-
   return newSchoolData;
 };
 
-exports.getSchools = async (pageRequest) => {
-  let numOfRecords = pageRequest?.numOfRecords || 20;
-  let offsetRecords = ((pageRequest?.pageNum || 1) - 1) * numOfRecords;
+exports.editSchool = async (schoolId, schoolData, file = null) => {
+  //Checking School is exists
+  const schoolModel = await School.findById(schoolId);
 
-  const { count: totalCount, rows: schools } = await School.findAndCountAll({
-    attributes: ["id", "name", "email", "website", "address"],
-    limit: numOfRecords,
-    offset: offsetRecords,
-  });
+  if (!schoolModel) {
+    throw new AppError(`School with Id ${schoolId} not found`, 404);
+  }
+
+  //Updating School Logo
+  if (schoolData.is_logo_changed === "true") {
+    const isFileMoved = await moveFile(
+      file?.path,
+      `uploads/school_logos/${file?.filename}`
+    );
+
+    if (isFileMoved) {
+      let logoName = schoolModel.get("storage_logo_name", null, {
+        getters: false,
+      });
+      await deleteFile(`uploads/school_logos/${logoName}`);
+    }
+
+    schoolData.storage_logo_name = file?.filename;
+    schoolData.logo_original_name = file?.originalname;
+  } else {
+    if (schoolModel.storage_logo_name.trim()) {
+      schoolData.storage_logo_name = schoolModel.get(
+        "storage_logo_name",
+        null,
+        {
+          getters: false,
+        }
+      );
+    }
+  }
+
+  //Updating Password
+  if (schoolData.password && schoolData.password.trim()) {
+    schoolModel.password = schoolData.password.trim();
+  }
+
+  //Removing password field from the object
+  delete schoolData.password;
+
+  Object.assign(schoolModel, schoolData);
+
+  const updatedSchoolDetails = await schoolModel.save();
+  return updatedSchoolDetails;
+};
+
+exports.getSchools = async ({ numOfRecords, pageNum }, filters = {}) => {
+  let offsetRecords = ((pageNum || 1) - 1) * numOfRecords;
+
+  const schools = await School.find(filters)
+    .select("school_unique_id name email phone_number storage_logo_name")
+    .skip(offsetRecords)
+    .limit(numOfRecords)
+    .exec();
+
+  const totalCount = await School.countDocuments(filters);
 
   let totalPages = Math.ceil(totalCount / numOfRecords);
 
   return { schools, totalCount, totalPages };
 };
 
-exports.checkEmailExists = async (email) => {
-  const existingEmail = await School.findOne({
-    where: {
-      email: email,
-    },
-  });
+exports.getSchool = async (schoolId) => {
+  return await School.findById(schoolId).select("-password -__v").exec();
+};
+
+exports.checkEmailExists = async (email, schoolId = null) => {
+  const whereConditions = { email };
+
+  if (schoolId) {
+    whereConditions["_id"] = {
+      $ne: schoolId,
+    };
+  }
+  const existingEmail = await School.findOne(whereConditions);
 
   return existingEmail ? true : false;
+};
+
+exports.checkPhoneNumberExists = async (phoneNumber, schoolId = null) => {
+  const whereConditions = { phone_number: phoneNumber };
+
+  if (schoolId) {
+    whereConditions["_id"] = {
+      $ne: schoolId,
+    };
+  }
+
+  const isPhoneNuimberAvailable = await School.findOne(whereConditions);
+  return isPhoneNuimberAvailable ? true : false;
 };
