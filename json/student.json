@@ -1,0 +1,84 @@
+{
+  "id": "12345",
+  "firstName": "John",
+  "lastName": "Doe",
+  "gender": "Male",
+  "dateOfBirth": "2005-05-12",
+  "email": "johndoe@example.com",
+  "phoneNumber": "+1-234-567-8901",
+  "address": {
+    "street": "123 Main St",
+    "city": "Springfield",
+    "state": "IL",
+    "postalCode": "62701",
+    "country": "USA"
+  },
+  "enrollmentDate": "2021-09-01",
+  "gradeLevel": "10",
+  "class": "10-A",
+  "schoolYear": "2023-2024",
+  "enrollmentStatus": "Active",
+  "guardianDetails": {
+    "guardianName": "Jane Doe",
+    "relationship": "Mother",
+    "phoneNumber": "+1-234-567-8902"
+  },
+  "subjects": [
+    {
+      "subjectName": "Mathematics",
+      "grade": "A",
+      "teacherName": "Mr. Smith"
+    },
+    {
+      "subjectName": "English",
+      "grade": "B",
+      "teacherName": "Ms. Johnson"
+    },
+    {
+      "subjectName": "Science",
+      "grade": "A",
+      "teacherName": "Dr. White"
+    }
+  ],
+  "gpa": 3.85,
+  "attendance": {
+    "totalDays": 180,
+    "daysPresent": 170,
+    "daysAbsent": 10,
+    "tardies": 3
+  },
+  "extraCurricular": [
+    {
+      "activity": "Football",
+      "role": "Player",
+      "awards": ["Best Player 2023"]
+    },
+    {
+      "activity": "Drama Club",
+      "role": "Actor"
+    }
+  ],
+  "medicalConditions": ["Asthma"],
+  "allergies": ["Peanuts"],
+  "emergencyContacts": [
+    {
+      "name": "John Doe",
+      "relationship": "Father",
+      "phoneNumber": "+1-234-567-8903"
+    }
+  ],
+  "disciplinaryActions": [
+    {
+      "incidentDate": "2023-01-15",
+      "type": "Behavioral",
+      "description": "Disruptive behavior in class",
+      "actionTaken": "Warning"
+    },
+    {
+      "incidentDate": "2023-04-12",
+      "type": "Academic",
+      "description": "Plagiarism in assignment",
+      "actionTaken": "Suspension"
+    }
+  ]
+}
