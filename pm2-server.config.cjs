@@ -1,7 +1,7 @@
 module.exports = {
   apps: [
     {
-      script: "server.js",
+      script: "./dist/server.js",
       // watch: ".",
       name: "SchoolApp",
       instances: 0,
@@ -9,7 +9,7 @@ module.exports = {
       watch: true,
       env: {
         NODE_ENV: "production",
-        PORT: 5555,
+        PORT: 80,
       },
     },
   ],

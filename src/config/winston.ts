@@ -14,7 +14,11 @@ const logger = winston.createLogger({
       return `${timestamp} [${level}] ${message} (Location: ${location.trim()})`;
     })
   ),
-  transports: [new winston.transports.File({ filename: `../logs/app.log` })],
+  transports: [
+    new winston.transports.File({
+      filename: process.env.LOG_FILE || "app.log",
+    }),
+  ],
 });
 
 export default logger;

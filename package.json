@@ -8,6 +8,7 @@
     "tsc": "tsc",
     "postinstall": "npm run tsc",
     "start:dev": "nodemon --exec ts-node ./src/server.ts",
+    "start:debug": "node --inspect ./dist/server.js",
     "start:prod": "node ./dist/server.js",
     "test": "jest --detectOpenHandles",
     "test:watch": "jest --watch"
@@ -20,7 +21,6 @@
   "author": "Satya",
   "license": "ISC",
   "dependencies": {
-    "@types/jest": "^29.5.14",
     "app-root-path": "^3.1.0",
     "axios": "^1.7.9",
     "bcryptjs": "^2.4.3",
@@ -40,11 +40,13 @@
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1",
     "ts-jest": "^29.2.5",
-    "winston": "^3.13.0"
+    "winston": "^3.13.0",
+    "winston-daily-rotate-file": "^5.0.0"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
+    "@types/jest": "^29.5.14",
     "@types/jsonwebtoken": "^9.0.8",
     "@types/node": "^22.13.1",
     "@typescript-eslint/parser": "^8.23.0",

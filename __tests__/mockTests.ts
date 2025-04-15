@@ -47,25 +47,33 @@ describe("Mock Tests", () => {
   });
 
   it("Test-Mock-Function", () => {
-    const myMock2 = jest.fn(function () {
+    const myMock2 = jest.fn(() => {
       console.log(this);
     });
-    const b = {};
-    const bound = myMock2.bind(b);
-    bound();
-    //console.log(myMock2.mock.contexts);
+
+    const a = new myMock2();
+
+    // const b = {};
+    // const bound = myMock2.bind(b);
+    // bound();
+    // console.log(myMock2.mock.contexts);
   });
 
-  it("Mock-return-values", () => {
-    const myMock3 = jest.fn();
-    myMock3
-      .mockReturnValueOnce(2)
-      .mockReturnValueOnce("x")
-      .mockReturnValueOnce(4);
-    console.log(myMock3());
-    console.log(myMock3());
-    console.log(myMock3());
-  });
+  // it("Mock-return-values", () => {
+  //   const myMock3 = jest.fn();
+
+  //   myMock3.mockRejectedValueOnce(true).mockReturnValueOnce(false);
+
+  //   const result = [11, 12].filter((val) => myMock3(val));
+
+  //   expect(myMock3).toHaveBeenCalledTimes(2);
+  //   expect(result).toEqual([11]);
+
+  //   // myMock3
+  //   //   .mockReturnValueOnce(true)
+  //   //   .mockReturnValueOnce("x")
+  //   //   .mockReturnValueOnce(4);
+  // });
 });
 
 function forEach(items, callback) {

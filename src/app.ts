@@ -1,6 +1,5 @@
 import dotenv from "dotenv";
 import Express, { Application, Request, Response } from "express";
-const { testRequest } = require("./controllers/testController");
 
 import cors from "cors";
 import path from "path";
@@ -20,7 +19,10 @@ import userRoutes from "./routes/userRoutes";
 //Configuration
 dotenv.config({ path: "./config.env" });
 
-require(`./config/passport`);
+//This is asynchronous import for passport configuration
+import(`./config/passport`).then(() => {
+  console.log("Passport Configured");
+});
 
 const app: Application = Express();
 

@@ -1,8 +1,8 @@
 process.env.JWT_SECRET = "MySecreet";
 
-const request = require("supertest");
+import request from "supertest";
 
-const app = require("../app");
+import app from "../src/app";
 
 function errorTest() {
   throw new Error("Something went wrong");

@@ -15,7 +15,19 @@ process.on("uncaughtException", (err: unknown) => {
   process.exit(1);
 });
 
-mongoose.connect(process.env.DB, {});
+mongoose
+  .connect(process.env.DB, {})
+  .then(() => {
+    //Logging DB connection success
+    console.log("DB connection successful");
+    logger.info("DB connection successful");
+  })
+  .catch((err) => {
+    //Logging DB connection error
+    console.error("DB connection error:", err);
+    logger.error("DB connection error:", err);
+    process.exit(1);
+  });
 
 //Server starting
 var server = app.listen(process.env.PORT, () => {
