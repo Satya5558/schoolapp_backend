@@ -3,10 +3,10 @@ import passport from "passport";
 //Strategies
 import { ExtractJwt, Strategy as JwtStrategy } from "passport-jwt";
 import { Strategy as LocalStrategy } from "passport-local";
-import School from "../models/schoolModel";
+import School from "../models/school";
 
 //Models
-import User from "../models/userModel";
+import User from "../models/user";
 
 //Configuring Admin Local Strategy
 passport.use(
@@ -19,7 +19,7 @@ passport.use(
     async (email, password, done) => {
       try {
         // Find the user by email
-        const user = await User.findOne({ email });
+        const user = await User.findOne({ where: { email } });
 
         if (!user) {
           return done(null, false, { message: "User not found" });
@@ -27,7 +27,7 @@ passport.use(
 
         // Compare the provided password with the hashed one
         //const isMatch = await bcrypt.compare(password, user.password);
-        const isMatch = await user.checkPassword(password, user.password);
+        const isMatch = await user.comparePassword(password);
 
         if (!isMatch) {
           return done(null, false, { message: "Incorrect password" });
@@ -52,13 +52,13 @@ passport.use(
     async (email, password, done) => {
       try {
         //Find school by email
-        const school = await School.findOne({ email });
+        const school = await School.findOne({ where: { email } });
 
         if (!school) {
           return done(null, false, { message: "School not found" });
         }
         //Comparing passwords
-        const isMatched = await school.checkPassword(password, school.password);
+        const isMatched = await school.comparePassword(password);
 
         if (!isMatched) {
           return done(null, false, { message: "Incorrect password" });
@@ -83,7 +83,7 @@ passport.use(
     async (jwtPayload, done) => {
       try {
         // Find the user based on the payload's ID
-        const user = await User.findOne({ email: jwtPayload.email });
+        const user = await User.findOne({ where: { email: jwtPayload.email } });
 
         if (!user) {
           return done(null, false);
@@ -106,7 +106,9 @@ passport.use(
     async (jwtPayload, done) => {
       try {
         //Finding School based on the email
-        const school = await School.findOne({ email: jwtPayload.email });
+        const school = await School.findOne({
+          where: { email: jwtPayload.email },
+        });
 
         if (!school) {
           //If school not found returning error null with result false

@@ -1,10 +1,10 @@
+import { generateJWTToken } from "../services/jwtService";
 import catchAsync from "../utils/catchAsync";
 
-const { generateJWTToken } = require(`../services/jwtService`);
-
 export const login = catchAsync(async (req, res, next) => {
-  const { userName, email, roles } = req?.user;
+  const { userName, email } = req?.user;
 
+  const roles = ["ROLE_ADMIN"];
   //Generating token
   const token = generateJWTToken({ userName, email, roles });
 

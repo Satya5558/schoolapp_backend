@@ -1,8 +1,9 @@
-import dotenv from "dotenv";
-import Express, { Application, Request, Response } from "express";
-
 import cors from "cors";
+import Express, { Application, Request, Response } from "express";
 import path from "path";
+//Loading environment variables
+import "./config/loadEnv";
+
 import errorHandler from "./middlewares/errorHandler";
 
 //Integrating Swagger
@@ -15,9 +16,6 @@ import authRoutes from "./routes/authRoutes";
 import schoolRoutes from "./routes/schoolRoutes";
 import studentRoutes from "./routes/studentRoutes";
 import userRoutes from "./routes/userRoutes";
-
-//Configuration
-dotenv.config({ path: "./config.env" });
 
 //This is asynchronous import for passport configuration
 import(`./config/passport`).then(() => {

@@ -1,10 +1,13 @@
+import { NextFunction, Request, Response } from "express";
 import { validationResult } from "express-validator";
 import logger from "../config/winston";
+import ValidationError from "../exceptions/validationError";
 import { createAdminUser } from "../services/userService";
+import catchAsync from "../utils/catchAsync";
 import formatErrors from "../utils/validatorUtil";
 
-export const createUser = async (req, res, next) => {
-  try {
+export const createUser = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     //Validating Request
     const result = validationResult(req);
 
@@ -19,26 +22,12 @@ export const createUser = async (req, res, next) => {
         data: { user: userData },
       });
     } else {
-      return res.status(400).send({
-        status: "failed",
-        message: "validationErrors",
+      throw new ValidationError("validationErrors", {
+        statusCode: 400,
+        message: "Validation error",
         errors: formatErrors(result.array()),
+        isOperational: true,
       });
     }
-  } catch (err) {
-    if (err.name === "SequelizeUniqueConstraintError") {
-      logger.error(
-        "Unique constraint error:",
-        err.errors.map((e) => e.message)
-      );
-    }
-
-    logger.error(err.stack);
-
-    return res.status(500).send({
-      status: "failed",
-      message: "Something went wrong please try again",
-      data: {},
-    });
   }
-};
+);

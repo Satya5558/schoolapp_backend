@@ -1,11 +1,9 @@
-import { Types } from "mongoose";
-
 export interface ISchool {
-  _id?: Types.ObjectId;
-  school_unique_id: string;
+  id?: number;
   name: string;
   email: string;
   password: string;
+  address: string;
   city: string;
   state: string;
   country: string;
@@ -16,7 +14,8 @@ export interface ISchool {
   createdAt: Date;
   updatedAt: Date;
   storage_logo_name: string;
-  address: string;
-  getUniqueSchoolId(): Promise<string>;
-  checkPassword(password: string, dbPassword: string): Promise<boolean>;
+  school_unique_id: string;
+
+  // getUniqueSchoolId(): Promise<string>;
+  // checkPassword(password: string, dbPassword: string): Promise<boolean>;
 }

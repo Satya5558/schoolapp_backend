@@ -1,12 +1,24 @@
-import ValidationError from "../utils/validationError";
+import ValidationError from "../exceptions/validationError";
 
 const sendErrorDev = (err, req, res) => {
-  return res.status(err.statusCode).json({
-    status: err.status,
-    error: err,
-    message: err.message,
-    stack: err.stack,
-  });
+  if (err instanceof ValidationError) {
+    return res.status(err.statusCode).json({
+      status: err.status,
+      message: err.message,
+      errors: err.errors,
+      error: err,
+      stack: err.stack,
+      data: {},
+    });
+  } else {
+    return res.status(err.statusCode).json({
+      status: err.status,
+      error: err,
+      message: err.message,
+      stack: err.stack,
+      data: {},
+    });
+  }
 };
 
 const sendErrorProd = (err, req, res) => {
@@ -17,11 +29,13 @@ const sendErrorProd = (err, req, res) => {
         status: err.status,
         message: err.message,
         errors: err.errors,
+        data: {},
       });
     } else {
       return res.status(err.statusCode).json({
         status: err.status,
         message: err.message,
+        data: {},
       });
     }
   }
@@ -38,7 +52,9 @@ const sendErrorProd = (err, req, res) => {
 export default function (err, req, res, next) {
   err.statusCode = err.statusCode || 500;
   err.status = err.status || "error";
-  console.log(process.env.NODE_ENV);
+
+  //console.log(process.env.NODE_ENV);
+
   if (
     process.env.NODE_ENV === "development" ||
     process.env.NODE_ENV === "test"

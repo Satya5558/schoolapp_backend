@@ -1,12 +1,12 @@
 import { NextFunction, Response } from "express";
 import { validationResult } from "express-validator";
 import logger from "../config/winston";
-import School from "../models/schoolModel";
-import Student from "../models/studentModel";
+import ValidationError from "../exceptions/validationError";
+import School from "../models/school";
+import Student from "../models/student";
 import { createStudent } from "../services/studentService";
 import { PassportRequest } from "../types/PassportRequest";
 import catchAsync from "../utils/catchAsync";
-import ValidationError from "../utils/validationError";
 import formatErrors from "../utils/validatorUtil";
 
 //This middleware create Student
@@ -23,11 +23,11 @@ export const createStudentAction = catchAsync(
     }
 
     const authenticatedDetails = req.user;
-    const schoolDetails = await School.findById(authenticatedDetails._id);
+    const schoolDetails = await School.findByPk(authenticatedDetails.id);
 
     const studentDetails = { ...req.body };
 
-    studentDetails.school = schoolDetails.id;
+    studentDetails.school_id = schoolDetails.id;
 
     const savedStudentDetails = await createStudent(studentDetails);
 
@@ -42,11 +42,12 @@ export const createStudentAction = catchAsync(
 
 export const getStudentsAction = catchAsync(
   async (req: PassportRequest, res: Response, next: NextFunction) => {
-    const students = await Student.find({ school: req.user?._id })
-      .select("-createdAt -updatedAt -__v")
-      .exec();
+    const students = await Student.findAll({
+      where: { school_id: req.user?.id },
+      attributes: { exclude: ["createdAt", "updatedAt"] },
+    });
 
-    res.status(200).send({
+    return res.status(200).json({
       message: "Success",
       students: students,
     });

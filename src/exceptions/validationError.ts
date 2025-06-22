@@ -1,10 +1,12 @@
+import IValidationError from "../types/IValidationError";
+
 class ValidationError extends Error {
   statusCode: number;
   status: string;
   isOperational: boolean;
   errors: any;
 
-  constructor(message: string, errorDetails) {
+  constructor(message: string, errorDetails: IValidationError) {
     super(message);
 
     this.statusCode = errorDetails?.statusCode;
